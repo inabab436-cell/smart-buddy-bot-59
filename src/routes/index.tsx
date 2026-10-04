@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
-  ArrowLeft, BadgePercent, CreditCard, LayoutGrid, Link2, Package, ShoppingBag, Truck,
+  ArrowLeft, BadgePercent, Check, Crown, CreditCard, LayoutGrid, Link2, Package, ShoppingBag, Truck,
 } from "lucide-react";
 
 import logo from "@/assets/cupai-logo.png.asset.json";
@@ -112,6 +112,31 @@ function Index() {
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+          <div className="mb-6 text-center">
+            <p className="text-xs font-semibold text-primary">الأسعار</p>
+            <h2 className="mt-1 text-2xl font-bold">باقة واحدة، كل شيء</h2>
+          </div>
+          <div className="mx-auto max-w-sm rounded-2xl border-2 border-primary bg-card p-7 text-center shadow-card">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+              <Crown className="h-3.5 w-3.5" /> ابدأ فورًا
+            </span>
+            <div className="mt-5 flex items-baseline justify-center gap-1">
+              <span className="text-5xl font-extrabold">299</span>
+              <span className="text-lg font-bold text-muted-foreground">ج</span>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">فقط</p>
+            <ul className="mt-6 space-y-2 text-right text-sm">
+              {FEATURES.map(({ title }) => (
+                <li key={title} className="flex items-center gap-2">
+                  <Check className="h-4 w-4 shrink-0 text-primary" /> {title}
+                </li>
+              ))}
+            </ul>
+            <Button size="lg" className="mt-7 w-full" onClick={toLogin}>ابدأ متجرك الآن بـ 299</Button>
           </div>
         </section>
 
