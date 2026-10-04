@@ -67,3 +67,16 @@ export const logout = createServerFn({ method: "POST" }).handler(async () => {
   await clearSession(getSessionConfig());
   return { ok: true };
 });
+
+export const deleteAccount = createServerFn({ method: "POST" }).handler(async () => {
+  const { getSession, clearSession } = await import("@tanstack/react-start/server");
+  const { getSessionConfig } = await import("@/lib/session.server");
+  const session = await getSession<{ userId: string; email: string }>(getSessionConfig());
+  const userId = session.data?.userId;
+  if (!userId) throw new Error("You must be logged in.");
+  const { getSupabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { error } = await getSupabaseAdmin().auth.admin.deleteUser(userId);
+  if (error) throw new Error(error.message);
+  await clearSession(getSessionConfig());
+  return { ok: true };
+});

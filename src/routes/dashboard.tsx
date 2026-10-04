@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { HubTabBar } from "@/components/hub/hub-shell";
+import { MerchantProfileMenu } from "@/components/hub/merchant-profile-menu";
 import logo from "@/assets/cupai-logo.png.asset.json";
 import { SiteIdentity, SiteSettingsButton, SiteLinkCard } from "@/components/website/site-link-bar";
 import { useHubBadges, badgeText } from "@/lib/hub-badges";
@@ -101,6 +102,7 @@ function DashboardPage() {
             <SiteIdentity fallbackLogo={logo.url} />
             <div className="flex shrink-0 items-center gap-2">
               <SiteSettingsButton />
+              <MerchantProfileMenu />
             </div>
           </div>
         </header>
