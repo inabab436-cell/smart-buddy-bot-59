@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import {
-  ChevronDown, Copy, Crown, ExternalLink, Globe2, LogOut, Mail, ShieldCheck, Trash2,
+  ChevronDown, Copy, Crown, ExternalLink, Globe2, LogOut, Mail, ShieldCheck, Trash2, UserRound,
 } from "lucide-react";
 
 import { getSessionInfo, logout, deleteAccount } from "@/lib/auth.functions";
@@ -248,10 +248,12 @@ export function MerchantProfileMenu({ subscribed = false }: { subscribed?: boole
       <span className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
         {site?.logo_url ? (
           <img src={site.logo_url} alt="" className="h-full w-full object-cover" />
-        ) : (
+        ) : site?.brand_name || email ? (
           <span className="text-xs font-extrabold">
-            {(site?.brand_name ?? email ?? "؟").charAt(0).toUpperCase()}
+            {(site?.brand_name ?? email ?? "").charAt(0).toUpperCase()}
           </span>
+        ) : (
+          <UserRound className="h-4 w-4" />
         )}
       </span>
       <span className="text-sm font-bold">حسابك</span>
