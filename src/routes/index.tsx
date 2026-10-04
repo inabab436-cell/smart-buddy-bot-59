@@ -1,24 +1,130 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import {
+  ArrowLeft, BadgePercent, CreditCard, LayoutGrid, Link2, Package, ShoppingBag, Truck,
+} from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import logo from "@/assets/cupai-logo.png.asset.json";
+import { Button } from "@/components/ui/button";
+import { getSessionInfo } from "@/lib/auth.functions";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "كيوباي — إدارة متجرك" },
+      { name: "description", content: "كيوباي: أدر منتجاتك وطلباتك وعملاءك من لوحة تحكم واحدة." },
+      { property: "og:title", content: "كيوباي — إدارة متجرك" },
+      { property: "og:description", content: "أدر منتجاتك وطلباتك وعملاءك من لوحة تحكم واحدة." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+const FEATURES = [
+  { icon: Link2, title: "متجر برابط خاص", text: "صفحة أنيقة لمتجرك تشاركها مع عملائك في أي مكان.", tone: "bg-dashboard-blue-soft text-dashboard-blue" },
+  { icon: Package, title: "عرض منتجاتك", text: "الصور والأسعار والمقاسات والكميات في مكان واحد.", tone: "bg-dashboard-green-soft text-dashboard-green" },
+  { icon: ShoppingBag, title: "استلام الطلبات", text: "تصلك الطلبات فورًا مع كل بيانات العميل.", tone: "bg-dashboard-rose-soft text-dashboard-rose" },
+  { icon: LayoutGrid, title: "إدارة الطلبات", text: "تابع حالة كل طلب من التجهيز حتى التسليم.", tone: "bg-dashboard-amber-soft text-dashboard-amber" },
+  { icon: Truck, title: "الشحن", text: "حدّد المناطق وتكلفة التوصيل لكل منطقة.", tone: "bg-dashboard-blue-soft text-dashboard-blue" },
+  { icon: CreditCard, title: "طرق الدفع", text: "اختر كيف تستلم أموالك من عملائك.", tone: "bg-dashboard-green-soft text-dashboard-green" },
+  { icon: BadgePercent, title: "العروض والخصومات", text: "أنشئ عروضًا تزيد مبيعاتك بسهولة.", tone: "bg-dashboard-rose-soft text-dashboard-rose" },
+];
+
+const STEPS = ["أنشئ حسابك", "أضف منتجاتك", "شارك رابط متجرك واستقبل الطلبات"];
+
 function Index() {
+  const fetchSession = useServerFn(getSessionInfo);
+  const [showLanding, setShowLanding] = useState(false);
+
+  useEffect(() => {
+    fetchSession()
+      .then((res) => (res.email ? window.location.replace("/dashboard") : setShowLanding(true)))
+      .catch(() => setShowLanding(true));
+  }, [fetchSession]);
+
+  if (!showLanding) return <div className="hub min-h-screen bg-background" />;
+
+  const toLogin = () => window.location.assign("/login");
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div dir="rtl" className="hub hub-dashboard min-h-screen bg-background">
+      <header className="sticky top-0 z-20 border-b border-border bg-card/90 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-2">
+            <img src={logo.url} alt="كيوباي" className="h-9 w-9 rounded-lg" />
+            <span className="text-base font-extrabold">كيوباي</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={toLogin}>تسجيل الدخول</Button>
+            <Button size="sm" onClick={toLogin}>أنشئ متجرك</Button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section className="mx-auto max-w-6xl px-4 pb-14 pt-14 text-center sm:px-6 sm:pt-20">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-primary shadow-card">
+            <ShoppingBag className="h-3.5 w-3.5" /> متجرك الإلكتروني في دقائق
+          </span>
+          <h1 className="mx-auto mt-5 max-w-3xl text-3xl font-extrabold leading-tight sm:text-5xl">
+            اعرض منتجاتك، استقبل طلباتك،<br className="hidden sm:block" /> وأدرها من مكان واحد
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            كيوباي تمنحك متجرًا جاهزًا برابط خاص ولوحة تحكم بسيطة لمتابعة الطلبات والشحن والدفع.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button size="lg" className="w-full px-10 sm:w-auto" onClick={toLogin}>
+              أنشئ متجرك الآن <ArrowLeft className="mr-1 h-4 w-4" />
+            </Button>
+            <Button size="lg" variant="outline" className="w-full px-10 sm:w-auto" onClick={toLogin}>
+              لدي حساب
+            </Button>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+          <div className="mb-6 text-center">
+            <p className="text-xs font-semibold text-primary">المزايا</p>
+            <h2 className="mt-1 text-2xl font-bold">كل ما يحتاجه متجرك</h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURES.map(({ icon: Icon, title, text, tone }) => (
+              <div key={title} className="rounded-xl border border-border bg-card p-5 shadow-card transition hover:-translate-y-0.5 hover:border-primary/30">
+                <span className={`grid h-10 w-10 place-items-center rounded-lg ${tone}`}><Icon className="h-5 w-5" /></span>
+                <h3 className="mt-4 text-sm font-bold">{title}</h3>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-10">
+            <h2 className="text-center text-2xl font-bold">ابدأ في ثلاث خطوات</h2>
+            <ol className="mt-8 grid gap-4 sm:grid-cols-3">
+              {STEPS.map((s, i) => (
+                <li key={s} className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground">{i + 1}</span>
+                  <span className="text-sm font-semibold">{s}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+          <div className="rounded-2xl bg-gradient-brand p-8 text-center sm:p-12">
+            <h2 className="text-2xl font-extrabold text-primary-foreground sm:text-3xl">جاهز تبدأ البيع؟</h2>
+            <p className="mt-2 text-sm text-primary-foreground/80">أنشئ متجرك الآن وابدأ استقبال الطلبات اليوم.</p>
+            <Button size="lg" variant="secondary" className="mt-6 px-10" onClick={toLogin}>أنشئ متجرك</Button>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">© كيوباي</footer>
     </div>
   );
 }
