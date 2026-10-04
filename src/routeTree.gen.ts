@@ -14,7 +14,6 @@ import { Route as AwaitingPaymentRouteImport } from './routes/awaiting-payment'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as ConversationsRouteImport } from './routes/conversations'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as JoinRouteImport } from './routes/join'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OffersRouteImport } from './routes/offers'
 import { Route as OrdersRouteImport } from './routes/orders'
@@ -54,11 +53,6 @@ const ConversationsRoute = ConversationsRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JoinRoute = JoinRouteImport.update({
-  id: '/join',
-  path: '/join',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -143,7 +137,6 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof ContactsRoute
   '/conversations': typeof ConversationsRoute
   '/dashboard': typeof DashboardRoute
-  '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/offers': typeof OffersRoute
   '/orders': typeof OrdersRoute
@@ -166,7 +159,6 @@ export interface FileRoutesByTo {
   '/contacts': typeof ContactsRoute
   '/conversations': typeof ConversationsRoute
   '/dashboard': typeof DashboardRoute
-  '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/offers': typeof OffersRoute
   '/orders': typeof OrdersRoute
@@ -189,7 +181,6 @@ export interface FileRoutesById {
   '/contacts': typeof ContactsRoute
   '/conversations': typeof ConversationsRoute
   '/dashboard': typeof DashboardRoute
-  '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/offers': typeof OffersRoute
   '/orders': typeof OrdersRoute
@@ -214,7 +205,6 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/conversations'
     | '/dashboard'
-    | '/join'
     | '/login'
     | '/offers'
     | '/orders'
@@ -237,7 +227,6 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/conversations'
     | '/dashboard'
-    | '/join'
     | '/login'
     | '/offers'
     | '/orders'
@@ -259,7 +248,6 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/conversations'
     | '/dashboard'
-    | '/join'
     | '/login'
     | '/offers'
     | '/orders'
@@ -283,7 +271,6 @@ export interface RootRouteChildren {
   ContactsRoute: typeof ContactsRoute
   ConversationsRoute: typeof ConversationsRoute
   DashboardRoute: typeof DashboardRoute
-  JoinRoute: typeof JoinRoute
   LoginRoute: typeof LoginRoute
   OffersRoute: typeof OffersRoute
   OrdersRoute: typeof OrdersRoute
@@ -333,13 +320,6 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/join': {
-      id: '/join'
-      path: '/join'
-      fullPath: '/join'
-      preLoaderRoute: typeof JoinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -470,7 +450,6 @@ const rootRouteChildren: RootRouteChildren = {
   ContactsRoute: ContactsRoute,
   ConversationsRoute: ConversationsRoute,
   DashboardRoute: DashboardRoute,
-  JoinRoute: JoinRoute,
   LoginRoute: LoginRoute,
   OffersRoute: OffersRoute,
   OrdersRoute: OrdersRoute,
