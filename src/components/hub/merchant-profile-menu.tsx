@@ -259,9 +259,9 @@ export function MerchantProfileMenu({ subscribed = false }: { subscribed?: boole
   return (
     <>
       {isMobile ? (
-        <Drawer open={open} onOpenChange={setOpen} dir="rtl">
+        <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-          <DrawerContent className="hub-dashboard mx-auto max-h-[88vh] max-w-lg overflow-y-auto rounded-t-3xl border-border pb-2">
+          <DrawerContent dir="rtl" className="hub-dashboard mx-auto max-h-[88vh] max-w-lg overflow-y-auto rounded-t-3xl border-border pb-2">
             <DrawerHeader className="p-0 pb-1 pt-2 text-center">
               <DrawerTitle className="sr-only">حسابك</DrawerTitle>
             </DrawerHeader>
