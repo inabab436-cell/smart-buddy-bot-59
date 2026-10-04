@@ -76,15 +76,29 @@ function AccountBody({
 
   return (
     <div className="hub-dashboard text-right" dir="rtl">
+      <div className="flex items-center justify-between px-4 pb-2 pt-4">
+        <span className="text-xs font-bold text-muted-foreground">حسابك</span>
+        <span
+          className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+            subscribed ? "bg-dashboard-green-soft text-dashboard-green" : "bg-dashboard-amber-soft text-dashboard-amber"
+          }`}
+        >
+          <Crown className="h-3 w-3" />
+          {subscribed ? "مشترك" : "غير مشترك"}
+        </span>
+      </div>
+
       {/* Identity */}
-      <div className="flex items-center gap-3 px-4 pb-4 pt-1">
-        <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl border border-border bg-muted">
+      <div className="flex items-center gap-3 px-4 pb-4">
+        <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl border border-border bg-muted text-primary">
           {site?.logo_url ? (
             <img src={site.logo_url} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <span className="text-lg font-extrabold text-primary">
-              {(site?.brand_name ?? email ?? "؟").charAt(0).toUpperCase()}
+          ) : site?.brand_name || email ? (
+            <span className="text-lg font-extrabold">
+              {(site?.brand_name ?? email ?? "").charAt(0).toUpperCase()}
             </span>
+          ) : (
+            <UserRound className="h-6 w-6" />
           )}
         </span>
         <span className="min-w-0 flex-1">
