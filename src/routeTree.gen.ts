@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AwaitingPaymentRouteImport } from './routes/awaiting-payment'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as ConversationsRouteImport } from './routes/conversations'
@@ -33,6 +34,11 @@ import { Route as CSlugTrackRouteImport } from './routes/c.$slug.track'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AwaitingPaymentRoute = AwaitingPaymentRouteImport.update({
@@ -133,6 +139,7 @@ const CSlugTrackRoute = CSlugTrackRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/awaiting-payment': typeof AwaitingPaymentRoute
   '/contacts': typeof ContactsRoute
   '/conversations': typeof ConversationsRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/awaiting-payment': typeof AwaitingPaymentRoute
   '/contacts': typeof ContactsRoute
   '/conversations': typeof ConversationsRoute
@@ -177,6 +185,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/awaiting-payment': typeof AwaitingPaymentRoute
   '/contacts': typeof ContactsRoute
   '/conversations': typeof ConversationsRoute
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/awaiting-payment'
     | '/contacts'
     | '/conversations'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/awaiting-payment'
     | '/contacts'
     | '/conversations'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/awaiting-payment'
     | '/contacts'
     | '/conversations'
@@ -267,6 +279,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   AwaitingPaymentRoute: typeof AwaitingPaymentRoute
   ContactsRoute: typeof ContactsRoute
   ConversationsRoute: typeof ConversationsRoute
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/awaiting-payment': {
@@ -446,6 +466,7 @@ const CSlugRouteWithChildren = CSlugRoute._addFileChildren(CSlugRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   AwaitingPaymentRoute: AwaitingPaymentRoute,
   ContactsRoute: ContactsRoute,
   ConversationsRoute: ConversationsRoute,
