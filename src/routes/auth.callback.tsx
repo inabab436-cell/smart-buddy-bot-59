@@ -20,7 +20,7 @@ export const Route = createFileRoute("/auth/callback")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "جارٍ تسجيل الدخول · كيوباي" },
+      { title: "جارٍ تسجيل الدخول · coopai" },
       { name: "description", content: "إكمال تسجيل الدخول باستخدام Google." },
     ],
   }),

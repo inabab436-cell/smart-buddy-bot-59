@@ -18,9 +18,9 @@ import { ONBOARDING_DONE_KEY } from "@/lib/onboarding";
 export const Route = createFileRoute("/welcome")({
   head: () => ({
     meta: [
-      { title: "أهلاً بك في كيوباي · جهّز متجرك" },
-      { name: "description", content: "خطوات بسيطة لتجهيز متجرك والبدء في البيع مع كيوباي." },
-      { property: "og:title", content: "أهلاً بك في كيوباي · جهّز متجرك" },
+      { title: "أهلاً بك في coopai · جهّز متجرك" },
+      { name: "description", content: "خطوات بسيطة لتجهيز متجرك والبدء في البيع مع coopai." },
+      { property: "og:title", content: "أهلاً بك في coopai · جهّز متجرك" },
       { property: "og:description", content: "جهّز هوية متجرك وأساسيات البيع في دقائق." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -110,8 +110,8 @@ function WelcomePage() {
       <header className="border-b border-border bg-card/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-2xl items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <img src={logo.url} alt="كيوباي" className="h-9 w-9 rounded-lg" />
-            <span className="text-sm font-bold">كيوباي</span>
+            <img src={logo.url} alt="coopai" className="h-9 w-9 rounded-lg" />
+            <span className="text-sm font-bold">coopai</span>
           </div>
           {step < 3 ? (
             <button type="button" onClick={finish} disabled={busy} className="text-xs font-semibold text-muted-foreground hover:text-foreground">
@@ -130,7 +130,7 @@ function WelcomePage() {
               <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-primary/10 text-primary">
                 <Sparkles className="h-8 w-8" />
               </div>
-              <h1 className="mt-5 text-2xl font-extrabold sm:text-3xl">أهلاً بك في كيوباي 👋</h1>
+              <h1 className="mt-5 text-2xl font-extrabold sm:text-3xl">أهلاً بك في coopai 👋</h1>
               <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
                 خلال دقيقتين سنجهّز متجرك معًا. كل خطوة يمكنك تعديلها لاحقًا في أي وقت.
               </p>

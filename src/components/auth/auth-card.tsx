@@ -18,8 +18,8 @@ export function AuthCard({
     <div dir="rtl" className="hub grid min-h-screen bg-background lg:grid-cols-2">
       <aside className="relative hidden overflow-hidden bg-gradient-brand p-12 lg:flex lg:flex-col lg:justify-between">
         <div className="flex items-center gap-3">
-          <img src={logoAsset.url} alt="كيوباي" className="h-12 w-12 rounded-xl bg-card object-contain p-1 shadow-elegant" />
-          <span className="text-xl font-extrabold text-primary-foreground">كيوباي</span>
+          <img src={logoAsset.url} alt="coopai" className="h-12 w-12 rounded-xl bg-card object-contain p-1 shadow-elegant" />
+          <span className="text-xl font-extrabold text-primary-foreground">coopai</span>
         </div>
         <div className="space-y-4">
           <h2 className="text-4xl font-extrabold leading-tight text-primary-foreground">متجرك كله<br />في لوحة واحدة</h2>
@@ -27,15 +27,15 @@ export function AuthCard({
             المنتجات، الطلبات، الشحن والعملاء — بإدارة بسيطة وواضحة.
           </p>
         </div>
-        <span className="text-sm text-primary-foreground/60">© كيوباي</span>
+        <span className="text-sm text-primary-foreground/60">© coopai</span>
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-primary-foreground/10 blur-2xl" />
       </aside>
 
       <main className="flex items-center justify-center px-5 py-10 sm:px-10">
         <div className="w-full max-w-sm">
           <div className="mb-10 flex items-center gap-3 lg:hidden">
-            <img src={logoAsset.url} alt="كيوباي" className="h-12 w-12 rounded-xl bg-card object-contain p-1 shadow-elegant" />
-            <span className="text-xl font-extrabold tracking-tight text-gradient-brand">كيوباي</span>
+            <img src={logoAsset.url} alt="coopai" className="h-12 w-12 rounded-xl bg-card object-contain p-1 shadow-elegant" />
+            <span className="text-xl font-extrabold tracking-tight text-gradient-brand">coopai</span>
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground">{title}</h1>
           {subtitle ? <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{subtitle}</p> : null}
