@@ -71,7 +71,7 @@ export const adminLogin = createServerFn({ method: "POST" })
     if (!expected) return { ok: false, message: "لم يتم ضبط كلمة مرور المدير بعد." };
     const { createHash, timingSafeEqual } = await import("node:crypto");
     const h = (x: string) => createHash("sha256").update(x, "utf8").digest();
-    const passOk = timingSafeEqual(h(data.password), h(expected));
+    const passOk = timingSafeEqual(h(data.password.trim()), h(expected.trim()));
     const emailOk = timingSafeEqual(h(data.email), h(ADMIN_EMAIL));
     if (!passOk || !emailOk) {
       await new Promise((r) => setTimeout(r, 600));
