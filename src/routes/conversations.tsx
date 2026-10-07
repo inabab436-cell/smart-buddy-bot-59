@@ -42,12 +42,32 @@ function shortTime(iso: string | null) {
     : d.toLocaleDateString("ar-EG", { day: "numeric", month: "short" });
 }
 
+const AVATAR_TONES = [
+  "bg-primary/15 text-primary",
+  "bg-chart-2/20 text-chart-2",
+  "bg-chart-3/20 text-chart-3",
+  "bg-chart-4/20 text-chart-4",
+  "bg-chart-5/20 text-chart-5",
+];
+
 function Avatar({ name }: { name: string }) {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   return (
-    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+    <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-base font-bold ${AVATAR_TONES[h % AVATAR_TONES.length]}`}>
       {name.trim().charAt(0) || "؟"}
     </span>
   );
+}
+
+function groupLabel(iso: string) {
+  const d = new Date(iso);
+  const today = new Date();
+  const y = new Date(); y.setDate(today.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return "اليوم";
+  if (d.toDateString() === y.toDateString()) return "أمس";
+  if (today.getTime() - d.getTime() < 7 * 864e5) return "هذا الأسبوع";
+  return "أقدم";
 }
 
 function ConversationsPage() {
@@ -73,21 +93,37 @@ function ConversationsPage() {
     });
   }, [list.data, query, filter]);
 
+  const groups = useMemo(() => {
+    const out: { label: string; items: ConversationRow[] }[] = [];
+    const pinned = rows.filter((r) => r.awaiting_payment);
+    if (pinned.length && filter === "all") out.push({ label: "بانتظار الدفع", items: pinned });
+    for (const r of filter === "all" ? rows.filter((r) => !r.awaiting_payment) : rows) {
+      const label = groupLabel(r.last_message_at ?? r.created_at);
+      const g = out.find((x) => x.label === label);
+      if (g) g.items.push(r); else out.push({ label, items: [r] });
+    }
+    return out;
+  }, [rows, filter]);
+
+  const total = list.data?.length ?? 0;
   const paymentCount = (list.data ?? []).filter((r) => r.awaiting_payment).length;
   const select = (id?: string) => navigate({ search: id ? { c: id } : {} });
 
   return (
     <div dir="rtl" className="hub hub-chat flex h-[100dvh] overflow-hidden bg-background">
       {/* Inbox */}
-      <aside className={`${selectedId ? "hidden md:flex" : "flex"} w-full flex-col border-l border-border bg-card md:w-[360px]`}>
-        <header className="space-y-3 border-b border-border p-4">
+      <aside className={`${selectedId ? "hidden md:flex" : "flex"} w-full flex-col border-l border-border bg-card md:w-[380px]`}>
+        <header className="space-y-4 border-b border-border px-4 pb-4 pt-5">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold">المحادثات</h1>
-            <Link to="/dashboard" className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-foreground">
+            <div>
+              <h1 className="text-2xl font-extrabold tracking-tight">المحادثات</h1>
+              <p className="mt-0.5 text-xs text-muted-foreground">{total} محادثة{paymentCount ? ` · ${paymentCount} بانتظار الدفع` : ""}</p>
+            </div>
+            <Link to="/dashboard" className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <ArrowRight className="h-4 w-4" /> لوحة التحكم
             </Link>
           </div>
-          <label className="flex items-center gap-2 rounded-full bg-muted px-3 py-2">
+          <label className="flex items-center gap-2 rounded-2xl border border-transparent bg-muted px-3.5 py-2.5 transition-colors focus-within:border-primary focus-within:bg-background">
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
               value={query}
@@ -96,25 +132,40 @@ function ConversationsPage() {
               className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
           </label>
-          <div className="flex gap-2">
-            {([["all", "الكل"], ["payment", `بانتظار الدفع${paymentCount ? ` (${paymentCount})` : ""}`]] as const).map(([k, label]) => (
+          <div className="grid grid-cols-2 gap-1 rounded-2xl bg-muted p-1">
+            {([["all", "الكل", total], ["payment", "بانتظار الدفع", paymentCount]] as const).map(([k, label, n]) => (
               <button
                 key={k}
                 onClick={() => setFilter(k)}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${filter === k ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+                className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all ${filter === k ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
               >
                 {label}
+                <span className={`rounded-full px-1.5 text-[10px] ${filter === k ? "bg-primary text-primary-foreground" : "bg-background/70"}`}>{n}</span>
               </button>
             ))}
           </div>
         </header>
-        <div className="flex-1 overflow-y-auto">
-          {list.isLoading && <p className="p-6 text-center text-sm text-muted-foreground">جارٍ التحميل…</p>}
+        <div className="flex-1 overflow-y-auto px-2 py-2">
+          {list.isLoading &&
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex animate-pulse items-center gap-3 px-2 py-3">
+                <span className="h-12 w-12 rounded-2xl bg-muted" />
+                <span className="flex-1 space-y-2"><span className="block h-3 w-1/2 rounded bg-muted" /><span className="block h-3 w-3/4 rounded bg-muted" /></span>
+              </div>
+            ))}
           {!list.isLoading && rows.length === 0 && (
-            <p className="p-6 text-center text-sm text-muted-foreground">لا توجد محادثات.</p>
+            <div className="flex flex-col items-center gap-2 p-10 text-center text-muted-foreground">
+              <MessagesSquare className="h-9 w-9" />
+              <p className="text-sm">{query ? "لا نتائج مطابقة." : "لا توجد محادثات بعد."}</p>
+            </div>
           )}
-          {rows.map((r) => (
-            <InboxRow key={r.id} row={r} active={r.id === selectedId} onClick={() => select(r.id)} />
+          {groups.map((g) => (
+            <div key={g.label} className="mb-2">
+              <p className="px-3 pb-1 pt-3 text-[11px] font-bold text-muted-foreground">{g.label}</p>
+              {g.items.map((r) => (
+                <InboxRow key={r.id} row={r} active={r.id === selectedId} onClick={() => select(r.id)} />
+              ))}
+            </div>
           ))}
         </div>
       </aside>
@@ -124,9 +175,12 @@ function ConversationsPage() {
         {selectedId ? (
           <Thread key={selectedId} id={selectedId} onBack={() => select(undefined)} />
         ) : (
-          <div className="m-auto flex flex-col items-center gap-3 text-muted-foreground">
-            <MessagesSquare className="h-10 w-10" />
-            <p className="text-sm">اختر محادثة للبدء</p>
+          <div className="m-auto flex flex-col items-center gap-3 text-center text-muted-foreground">
+            <span className="grid h-20 w-20 place-items-center rounded-3xl bg-primary/10 text-primary">
+              <MessagesSquare className="h-10 w-10" />
+            </span>
+            <p className="text-base font-bold text-foreground">اختر محادثة</p>
+            <p className="text-sm">اختر عميلًا من القائمة لعرض الرسائل والرد عليه.</p>
           </div>
         )}
       </section>
@@ -139,18 +193,18 @@ function InboxRow({ row, active, onClick }: { row: ConversationRow; active: bool
   return (
     <button
       onClick={onClick}
-      className={`flex w-full items-center gap-3 border-b border-border/60 px-4 py-3.5 text-right transition-colors ${active ? "row-active" : "hover:bg-muted/60"}`}
+      className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right transition-colors ${active ? "row-active bg-primary/10" : "hover:bg-muted/70"}`}
     >
       <Avatar name={name} />
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
-          <span className="truncate text-sm font-bold">{name}</span>
+          <span className="truncate text-[15px] font-bold">{name}</span>
           <span className="ms-auto shrink-0 text-[11px] text-muted-foreground">{shortTime(row.last_message_at ?? row.created_at)}</span>
         </span>
-        <span className="mt-0.5 flex items-center gap-2">
-          <span className="truncate text-xs text-muted-foreground">{row.last_message_preview || "—"}</span>
+        <span className="mt-1 flex items-center gap-2">
+          <span className="truncate text-[13px] text-muted-foreground">{row.last_message_preview || "لا رسائل بعد"}</span>
           {row.awaiting_payment && (
-            <span className="ms-auto shrink-0 rounded-full bg-destructive px-2 py-0.5 text-[10px] font-bold text-destructive-foreground">دفع</span>
+            <span className="ms-auto shrink-0 rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold text-destructive">بانتظار الدفع</span>
           )}
         </span>
       </span>
