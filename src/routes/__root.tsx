@@ -80,15 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "كيوباي — وكيل ذكاء اصطناعي يردّ على عملائك" },
-      { name: "description", content: "كيوباي منصة ذكاء اصطناعي متكاملة تُدير محادثات عملائك وتردّ عليهم بكفاءة على مدار الساعة." },
+      { title: "coopai — وكيل ذكاء اصطناعي يردّ على عملائك" },
+      { name: "description", content: "coopai منصة ذكاء اصطناعي متكاملة تُدير محادثات عملائك وتردّ عليهم بكفاءة على مدار الساعة." },
       { name: "author", content: "cupai" },
-      { property: "og:title", content: "كيوباي — وكيل ذكاء اصطناعي يردّ على عملائك" },
-      { property: "og:description", content: "كيوباي منصة ذكاء اصطناعي متكاملة تُدير محادثات عملائك وتردّ عليهم بكفاءة على مدار الساعة." },
+      { property: "og:title", content: "coopai — وكيل ذكاء اصطناعي يردّ على عملائك" },
+      { property: "og:description", content: "coopai منصة ذكاء اصطناعي متكاملة تُدير محادثات عملائك وتردّ عليهم بكفاءة على مدار الساعة." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "كيوباي — وكيل ذكاء اصطناعي يردّ على عملائك" },
-      { name: "twitter:description", content: "كيوباي منصة ذكاء اصطناعي متكاملة تُدير محادثات عملائك وتردّ عليهم بكفاءة على مدار الساعة." },
+      { name: "twitter:title", content: "coopai — وكيل ذكاء اصطناعي يردّ على عملائك" },
+      { name: "twitter:description", content: "coopai منصة ذكاء اصطناعي متكاملة تُدير محادثات عملائك وتردّ عليهم بكفاءة على مدار الساعة." },
     ],
     links: [
       {
