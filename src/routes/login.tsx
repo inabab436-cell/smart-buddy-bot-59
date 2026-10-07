@@ -15,6 +15,7 @@ import {
   resetPasswordWithCode,
 } from "@/lib/merchant-email-auth.functions";
 import { ALLOWED_EMAIL, directSignIn } from "@/lib/direct-login.functions";
+import { ADMIN_EMAIL, adminLogin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -47,6 +48,8 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const direct = useServerFn(directSignIn);
+  const loginAdmin = useServerFn(adminLogin);
+  const isAdmin = email.trim().toLowerCase() === ADMIN_EMAIL;
   const isOwner = email.trim().toLowerCase() === ALLOWED_EMAIL;
 
   function switchMode(m: Mode) {
@@ -78,7 +81,11 @@ function LoginPage() {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     run(async () => {
-      if (mode === "login" && isOwner) {
+      if (mode === "login" && isAdmin) {
+        const r = await loginAdmin({ data: { email, password } });
+        if (!r.ok) return setError(r.message);
+        window.location.replace("/admin");
+      } else if (mode === "login" && isOwner) {
         go(await direct());
       } else if (mode === "login") {
         go(await login({ data: { email, password } }));

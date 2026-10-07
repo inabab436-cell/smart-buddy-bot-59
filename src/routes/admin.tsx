@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
-  adminLogin, adminLogout, adminStatus, createMerchant, deleteMerchant,
+  adminLogout, adminStatus, createMerchant, deleteMerchant,
   impersonateMerchant, listMerchants, updateMerchant, type AdminMerchant,
 } from "@/lib/admin.functions";
 
@@ -37,36 +37,9 @@ function AdminPage() {
   const status = useServerFn(adminStatus);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   useEffect(() => { status().then((s) => setSignedIn(s.signedIn)).catch(() => setSignedIn(false)); }, [status]);
-  if (signedIn === null) return <div className="p-10 text-center text-muted-foreground">جارٍ التحميل…</div>;
-  return signedIn ? <Console onOut={() => setSignedIn(false)} /> : <AdminLogin onIn={() => setSignedIn(true)} />;
-}
-
-function AdminLogin({ onIn }: { onIn: () => void }) {
-  const login = useServerFn(adminLogin);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-  const submit = async (e: FormEvent) => {
-    e.preventDefault(); setBusy(true); setErr(null);
-    try {
-      const r = await login({ data: { email, password } });
-      if (r.ok) onIn(); else setErr(r.message);
-    } catch { setErr("حدث خطأ."); } finally { setBusy(false); }
-  };
-  return (
-    <div dir="rtl" className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-2xl border bg-card p-6 shadow-sm">
-        <h1 className="text-xl font-bold">دخول الإدارة</h1>
-        <div className="space-y-1.5"><Label>البريد</Label>
-          <Input dir="ltr" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-        <div className="space-y-1.5"><Label>كلمة المرور</Label>
-          <Input dir="ltr" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
-        {err && <p className="text-sm text-destructive">{err}</p>}
-        <Button className="w-full" disabled={busy}>{busy ? "…" : "دخول"}</Button>
-      </form>
-    </div>
-  );
+  useEffect(() => { if (signedIn === false) window.location.replace("/login"); }, [signedIn]);
+  if (!signedIn) return <div className="p-10 text-center text-muted-foreground">جارٍ التحميل…</div>;
+  return <Console onOut={() => setSignedIn(false)} />;
 }
 
 function Console({ onOut }: { onOut: () => void }) {
